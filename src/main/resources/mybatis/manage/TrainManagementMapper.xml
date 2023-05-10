@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.manage.mapper.TrainManagementMapper">
+    
+    <resultMap type="TrainManagement" id="TrainManagementResult">
+        <result property="id"    column="id"    />
+        <result property="trainTitle"    column="train_title"    />
+        <result property="trainPersonName"    column="train_person_name"    />
+        <result property="trainMessage"    column="train_message"    />
+        <result property="trainDatetime"    column="train_datetime"    />
+        <result property="trainAddress"    column="train_address"    />
+        <result property="trainDesc"    column="train_desc"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectTrainManagementVo">
+        select id, train_title, train_person_name, train_message, train_datetime, train_address, train_desc, create_date, update_date from train_management
+    </sql>
+
+    <select id="selectTrainManagementList" parameterType="TrainManagement" resultMap="TrainManagementResult">
+        <include refid="selectTrainManagementVo"/>
+        <where>  
+            <if test="trainTitle != null  and trainTitle != ''"> and train_title = #{trainTitle}</if>
+            <if test="trainPersonName != null  and trainPersonName != ''"> and train_person_name like concat('%', #{trainPersonName}, '%')</if>
+            <if test="trainMessage != null  and trainMessage != ''"> and train_message = #{trainMessage}</if>
+            <if test="trainDatetime != null "> and train_datetime = #{trainDatetime}</if>
+            <if test="trainAddress != null  and trainAddress != ''"> and train_address = #{trainAddress}</if>
+            <if test="trainDesc != null  and trainDesc != ''"> and train_desc = #{trainDesc}</if>
+            <if test="createDate != null "> and create_date = #{createDate}</if>
+            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectTrainManagementById" parameterType="Long" resultMap="TrainManagementResult">
+        <include refid="selectTrainManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTrainManagement" parameterType="TrainManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into train_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="trainTitle != null">train_title,</if>
+            <if test="trainPersonName != null">train_person_name,</if>
+            <if test="trainMessage != null">train_message,</if>
+            <if test="trainDatetime != null">train_datetime,</if>
+            <if test="trainAddress != null">train_address,</if>
+            <if test="trainDesc != null">train_desc,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="trainTitle != null">#{trainTitle},</if>
+            <if test="trainPersonName != null">#{trainPersonName},</if>
+            <if test="trainMessage != null">#{trainMessage},</if>
+            <if test="trainDatetime != null">#{trainDatetime},</if>
+            <if test="trainAddress != null">#{trainAddress},</if>
+            <if test="trainDesc != null">#{trainDesc},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTrainManagement" parameterType="TrainManagement">
+        update train_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="trainTitle != null">train_title = #{trainTitle},</if>
+            <if test="trainPersonName != null">train_person_name = #{trainPersonName},</if>
+            <if test="trainMessage != null">train_message = #{trainMessage},</if>
+            <if test="trainDatetime != null">train_datetime = #{trainDatetime},</if>
+            <if test="trainAddress != null">train_address = #{trainAddress},</if>
+            <if test="trainDesc != null">train_desc = #{trainDesc},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTrainManagementById" parameterType="Long">
+        delete from train_management where id = #{id}
+    </delete>
+
+    <delete id="deleteTrainManagementByIds" parameterType="String">
+        delete from train_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
