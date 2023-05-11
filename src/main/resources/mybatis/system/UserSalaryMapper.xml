@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.UserSalaryMapper">
+    <resultMap type="UserSalary" id="UserSalaryResult">
+        <result property="id" column="id"/>
+        <result property="userCode" column="user_code"/>
+        <result property="userName" column="user_name"/>
+        <result property="userSourceDept" column="user_source_dept"/>
+        <result property="baseMoney" column="base_money"/>
+        <result property="insuranceMoney" column="insurance_money"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
+    </resultMap>
+
+    <sql id="selectUserSalaryVo">
+        select id,
+               user_code,
+               user_name,
+               user_source_dept,
+               base_money,
+               insurance_money,
+               create_date,
+               update_date
+        from user_salary
+    </sql>
+
+    <select id="selectUserSalaryList" parameterType="UserSalary" resultMap="UserSalaryResult">
+        <include refid="selectUserSalaryVo"/>
+        <where>
+            <if test="userName != null  and userName != ''">
+                and user_name like concat('%', #{userName}, '%')
+            </if>
+            <if test="userSourceDept != null  and userSourceDept != ''">
+                and user_source_dept = #{userSourceDept}
+            </if>
+            <if test="baseMoney != null  and baseMoney != ''">
+                and base_money = #{baseMoney}
+            </if>
+            <if test="insuranceMoney != null  and insuranceMoney != ''">
+                and insurance_money = #{insuranceMoney}
+            </if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''">
+                and create_date between #{params.beginCreateDate} and #{params.endCreateDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUserSalaryById" parameterType="Long" resultMap="UserSalaryResult">
+        <include refid="selectUserSalaryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUserSalary" parameterType="UserSalary" useGeneratedKeys="true" keyProperty="id">
+        insert into user_salary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">
+                user_code,
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name,
+            </if>
+            <if test="userSourceDept != null and userSourceDept != ''">
+                user_source_dept,
+            </if>
+            <if test="baseMoney != null">
+                base_money,
+            </if>
+            <if test="insuranceMoney != null">
+                insurance_money,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">
+                #{userCode},
+            </if>
+            <if test="userName != null and userName != ''">
+                #{userName},
+            </if>
+            <if test="userSourceDept != null and userSourceDept != ''">
+                #{userSourceDept},
+            </if>
+            <if test="baseMoney != null">
+                #{baseMoney},
+            </if>
+            <if test="insuranceMoney != null">
+                #{insuranceMoney},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateUserSalary" parameterType="UserSalary">
+        update user_salary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userCode != null and userCode != ''">
+                user_code = #{userCode},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="userSourceDept != null and userSourceDept != ''">
+                user_source_dept = #{userSourceDept},
+            </if>
+            <if test="baseMoney != null">
+                base_money = #{baseMoney},
+            </if>
+            <if test="insuranceMoney != null">
+                insurance_money = #{insuranceMoney},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserSalaryById" parameterType="Long">
+        delete
+        from user_salary
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteUserSalaryByIds" parameterType="String">
+        delete from user_salary where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
