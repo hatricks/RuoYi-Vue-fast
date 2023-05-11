@@ -33,8 +33,8 @@ public class TrainManagement extends BaseEntity
     private String trainMessage;
 
     /** 培训时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "培训时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "培训时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date trainDatetime;
 
     /** 培训地址 */
@@ -46,13 +46,13 @@ public class TrainManagement extends BaseEntity
     private String trainDesc;
 
     /** 创建时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "创建时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date createDate;
 
     /** 修改时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date updateDate;
 
     public void setId(Long id) 

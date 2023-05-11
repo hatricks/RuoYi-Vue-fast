@@ -25,12 +25,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="trainTitle != null  and trainTitle != ''"> and train_title = #{trainTitle}</if>
             <if test="trainPersonName != null  and trainPersonName != ''"> and train_person_name like concat('%', #{trainPersonName}, '%')</if>
-            <if test="trainMessage != null  and trainMessage != ''"> and train_message = #{trainMessage}</if>
-            <if test="trainDatetime != null "> and train_datetime = #{trainDatetime}</if>
-            <if test="trainAddress != null  and trainAddress != ''"> and train_address = #{trainAddress}</if>
-            <if test="trainDesc != null  and trainDesc != ''"> and train_desc = #{trainDesc}</if>
-            <if test="createDate != null "> and create_date = #{createDate}</if>
-            <if test="updateDate != null "> and update_date = #{updateDate}</if>
+            <if test="params.beginTrainDatetime != null and params.beginTrainDatetime != '' and params.endTrainDatetime != null and params.endTrainDatetime != ''"> and train_datetime between #{params.beginTrainDatetime} and #{params.endTrainDatetime}</if>
+            <if test="trainAddress != null  and trainAddress != ''"> and train_address like concat('%', #{trainAddress}, '%')</if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
         </where>
     </select>
     
@@ -42,21 +39,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertTrainManagement" parameterType="TrainManagement" useGeneratedKeys="true" keyProperty="id">
         insert into train_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="trainTitle != null">train_title,</if>
-            <if test="trainPersonName != null">train_person_name,</if>
+            <if test="trainTitle != null and trainTitle != ''">train_title,</if>
+            <if test="trainPersonName != null and trainPersonName != ''">train_person_name,</if>
             <if test="trainMessage != null">train_message,</if>
             <if test="trainDatetime != null">train_datetime,</if>
-            <if test="trainAddress != null">train_address,</if>
+            <if test="trainAddress != null and trainAddress != ''">train_address,</if>
             <if test="trainDesc != null">train_desc,</if>
             <if test="createDate != null">create_date,</if>
             <if test="updateDate != null">update_date,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="trainTitle != null">#{trainTitle},</if>
-            <if test="trainPersonName != null">#{trainPersonName},</if>
+            <if test="trainTitle != null and trainTitle != ''">#{trainTitle},</if>
+            <if test="trainPersonName != null and trainPersonName != ''">#{trainPersonName},</if>
             <if test="trainMessage != null">#{trainMessage},</if>
             <if test="trainDatetime != null">#{trainDatetime},</if>
-            <if test="trainAddress != null">#{trainAddress},</if>
+            <if test="trainAddress != null and trainAddress != ''">#{trainAddress},</if>
             <if test="trainDesc != null">#{trainDesc},</if>
             <if test="createDate != null">#{createDate},</if>
             <if test="updateDate != null">#{updateDate},</if>
@@ -66,11 +63,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateTrainManagement" parameterType="TrainManagement">
         update train_management
         <trim prefix="SET" suffixOverrides=",">
-            <if test="trainTitle != null">train_title = #{trainTitle},</if>
-            <if test="trainPersonName != null">train_person_name = #{trainPersonName},</if>
+            <if test="trainTitle != null and trainTitle != ''">train_title = #{trainTitle},</if>
+            <if test="trainPersonName != null and trainPersonName != ''">train_person_name = #{trainPersonName},</if>
             <if test="trainMessage != null">train_message = #{trainMessage},</if>
             <if test="trainDatetime != null">train_datetime = #{trainDatetime},</if>
-            <if test="trainAddress != null">train_address = #{trainAddress},</if>
+            <if test="trainAddress != null and trainAddress != ''">train_address = #{trainAddress},</if>
             <if test="trainDesc != null">train_desc = #{trainDesc},</if>
             <if test="createDate != null">create_date = #{createDate},</if>
             <if test="updateDate != null">update_date = #{updateDate},</if>
