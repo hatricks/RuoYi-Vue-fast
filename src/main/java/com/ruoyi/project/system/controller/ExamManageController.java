@@ -101,4 +101,12 @@ public class ExamManageController extends BaseController
     {
         return toAjax(examManageService.deleteExamManageByIds(ids));
     }
+
+
+    @GetMapping("/all")
+    public AjaxResult All(ExamManage examManage)
+    {
+        List<ExamManage> list = examManageService.selectExamManageList(examManage);
+        return AjaxResult.success(list);
+    }
 }

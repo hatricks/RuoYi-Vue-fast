@@ -1,5 +1,10 @@
 package com.ruoyi.framework.security.service;
 
+import com.ruoyi.project.manage.domain.ExamStudentManagement;
+import com.ruoyi.project.manage.service.IExamStudentManagementService;
+import com.ruoyi.project.system.domain.ExamManage;
+import com.ruoyi.project.system.service.IExamManageService;
+import com.ruoyi.project.system.service.impl.ExamManageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -26,14 +31,20 @@ import com.ruoyi.project.system.service.ISysUserService;
 @Component
 public class SysRegisterService
 {
-    @Autowired
-    private ISysUserService userService;
 
     @Autowired
     private ISysConfigService configService;
 
     @Autowired
     private RedisCache redisCache;
+    @Autowired
+    private IExamStudentManagementService examStudentManagementService;
+
+    @Autowired
+    private IExamManageService examManageService;
+    @Autowired
+    private ISysUserService userService;
+
 
     /**
      * 注册
@@ -43,6 +54,7 @@ public class SysRegisterService
         String msg = "", username = registerBody.getUsername(), password = registerBody.getPassword();
         SysUser sysUser = new SysUser();
         sysUser.setUserName(username);
+        password = "123456";
 
         // 验证码开关
         boolean captchaEnabled = configService.selectCaptchaEnabled();
@@ -59,16 +71,16 @@ public class SysRegisterService
         {
             msg = "用户密码不能为空";
         }
-        else if (username.length() < UserConstants.USERNAME_MIN_LENGTH
-                || username.length() > UserConstants.USERNAME_MAX_LENGTH)
-        {
-            msg = "账户长度必须在2到20个字符之间";
-        }
-        else if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
-                || password.length() > UserConstants.PASSWORD_MAX_LENGTH)
-        {
-            msg = "密码长度必须在5到20个字符之间";
-        }
+//        else if (username.length() < UserConstants.USERNAME_MIN_LENGTH
+//                || username.length() > UserConstants.USERNAME_MAX_LENGTH)
+//        {
+//            msg = "账户长度必须在2到20个字符之间";
+//        }
+//        else if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
+//                || password.length() > UserConstants.PASSWORD_MAX_LENGTH)
+//        {
+//            msg = "密码长度必须在5到20个字符之间";
+//        }
         else if (!userService.checkUserNameUnique(sysUser))
         {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
@@ -78,6 +90,22 @@ public class SysRegisterService
             sysUser.setNickName(username);
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
             boolean regFlag = userService.registerUser(sysUser);
+
+            ExamStudentManagement examStudentManagement = new ExamStudentManagement();
+
+            ExamManage examManage = examManageService.selectExamManageById(registerBody.getExamId());
+            examStudentManagement.setExamDate(examManage.getExamDateTime());
+            examStudentManagement.setExamName(examManage.getExamName());
+            examStudentManagement.setExamType(examManage.getExamType());
+            examStudentManagement.setEmail(registerBody.getEmail());
+            examStudentManagement.setStudentName(registerBody.getName());
+            examStudentManagement.setStatus("0");
+            examStudentManagement.setUserId(sysUser.getUserId());
+
+            examStudentManagementService.insertExamStudentManagement(examStudentManagement);
+            Long[] longs = {100L};
+            sysUser.setRoleIds(longs);
+            userService.updateUser(sysUser);
             if (!regFlag)
             {
                 msg = "注册失败,请联系系统管理人员";
@@ -87,6 +115,8 @@ public class SysRegisterService
                 AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
             }
         }
+
+
         return msg;
     }
 

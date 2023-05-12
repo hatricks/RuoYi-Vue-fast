@@ -20,6 +20,10 @@ public class ExamStudentManagement extends BaseEntity
     /** 主键 */
     private Long id;
 
+
+    /** 用户ID */
+    private Long userId;
+
     /** 学生名称 */
     @Excel(name = "学生名称")
     private String studentName;
@@ -66,7 +70,16 @@ public class ExamStudentManagement extends BaseEntity
     {
         return id;
     }
-    public void setStudentName(String studentName) 
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public void setStudentName(String studentName)
     {
         this.studentName = studentName;
     }

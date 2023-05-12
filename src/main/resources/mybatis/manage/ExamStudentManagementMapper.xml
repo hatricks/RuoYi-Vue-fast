@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="ExamStudentManagement" id="ExamStudentManagementResult">
         <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
         <result property="studentName"    column="student_name"    />
         <result property="studentPassword"    column="student_password"    />
         <result property="status"    column="status"    />
@@ -31,6 +32,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
             <if test="examType != null  and examType != ''"> and exam_type = #{examType}</if>
             <if test="examDate != null "> and exam_date = #{examDate}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+
         </where>
     </select>
     
@@ -42,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertExamStudentManagement" parameterType="ExamStudentManagement" useGeneratedKeys="true" keyProperty="id">
         insert into exam_student_management
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
             <if test="studentName != null">student_name,</if>
             <if test="studentPassword != null">student_password,</if>
             <if test="status != null">status,</if>
@@ -53,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateDate != null">update_date,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
             <if test="studentName != null">#{studentName},</if>
             <if test="studentPassword != null">#{studentPassword},</if>
             <if test="status != null">#{status},</if>
@@ -68,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateExamStudentManagement" parameterType="ExamStudentManagement">
         update exam_student_management
         <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="studentName != null">student_name = #{studentName},</if>
             <if test="studentPassword != null">student_password = #{studentPassword},</if>
             <if test="status != null">status = #{status},</if>
