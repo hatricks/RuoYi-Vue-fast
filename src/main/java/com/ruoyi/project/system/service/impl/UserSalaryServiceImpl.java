@@ -1,6 +1,10 @@
 package com.ruoyi.project.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.project.system.domain.SysDept;
+import com.ruoyi.project.system.service.ISysDeptService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.project.system.mapper.UserSalaryMapper;
@@ -18,6 +22,8 @@ public class UserSalaryServiceImpl implements IUserSalaryService
 {
     @Autowired
     private UserSalaryMapper userSalaryMapper;
+    @Autowired
+    private ISysDeptService deptService;
 
     /**
      * 查询员工薪资
@@ -28,7 +34,13 @@ public class UserSalaryServiceImpl implements IUserSalaryService
     @Override
     public UserSalary selectUserSalaryById(Long id)
     {
-        return userSalaryMapper.selectUserSalaryById(id);
+
+        UserSalary userSalary = userSalaryMapper.selectUserSalaryById(id);
+        if(StringUtils.isNotBlank(userSalary.getUserSourceDept())){
+            SysDept sysDept = deptService.selectDeptById(Long.valueOf(userSalary.getUserSourceDept()));
+            userSalary.setDeptName(sysDept.getDeptName());
+        }
+        return userSalary;
     }
 
     /**
@@ -40,7 +52,15 @@ public class UserSalaryServiceImpl implements IUserSalaryService
     @Override
     public List<UserSalary> selectUserSalaryList(UserSalary userSalary)
     {
-        return userSalaryMapper.selectUserSalaryList(userSalary);
+        List<UserSalary> userSalaries = userSalaryMapper.selectUserSalaryList(userSalary);
+        userSalaries.stream().forEach(salary->{
+            if(StringUtils.isNotBlank(salary.getUserSourceDept())){
+                SysDept sysDept = deptService.selectDeptById(Long.valueOf(salary.getUserSourceDept()));
+                salary.setDeptName(sysDept.getDeptName());
+            }
+
+        });
+        return userSalaries;
     }
 
     /**

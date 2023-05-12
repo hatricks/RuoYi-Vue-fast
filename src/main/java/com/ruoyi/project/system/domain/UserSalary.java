@@ -32,6 +32,11 @@ public class UserSalary extends BaseEntity
     @Excel(name = "员工所属部门")
     private String userSourceDept;
 
+
+    /** 员工所属部门 */
+    @Excel(name = "员工所属部门")
+    private String deptName;
+
     /** 基本薪资 */
     @Excel(name = "基本薪资")
     private String baseMoney;
@@ -50,7 +55,15 @@ public class UserSalary extends BaseEntity
     @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date updateDate;
 
-    public void setId(Long id) 
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.manage.mapper.ExamStudentManagementMapper">
+    
+    <resultMap type="ExamStudentManagement" id="ExamStudentManagementResult">
+        <result property="id"    column="id"    />
+        <result property="studentName"    column="student_name"    />
+        <result property="studentPassword"    column="student_password"    />
+        <result property="status"    column="status"    />
+        <result property="email"    column="email"    />
+        <result property="examName"    column="exam_name"    />
+        <result property="examType"    column="exam_type"    />
+        <result property="examDate"    column="exam_date"    />
+        <result property="createDate"    column="create_date"    />
+        <result property="updateDate"    column="update_date"    />
+    </resultMap>
+
+    <sql id="selectExamStudentManagementVo">
+        select id, student_name, student_password, status, email, exam_name, exam_type, exam_date, create_date, update_date from exam_student_management
+    </sql>
+
+    <select id="selectExamStudentManagementList" parameterType="ExamStudentManagement" resultMap="ExamStudentManagementResult">
+        <include refid="selectExamStudentManagementVo"/>
+        <where>  
+            <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentPassword != null  and studentPassword != ''"> and student_password = #{studentPassword}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
+            <if test="examType != null  and examType != ''"> and exam_type = #{examType}</if>
+            <if test="examDate != null "> and exam_date = #{examDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamStudentManagementById" parameterType="Long" resultMap="ExamStudentManagementResult">
+        <include refid="selectExamStudentManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertExamStudentManagement" parameterType="ExamStudentManagement" useGeneratedKeys="true" keyProperty="id">
+        insert into exam_student_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="studentName != null">student_name,</if>
+            <if test="studentPassword != null">student_password,</if>
+            <if test="status != null">status,</if>
+            <if test="email != null">email,</if>
+            <if test="examName != null">exam_name,</if>
+            <if test="examType != null">exam_type,</if>
+            <if test="examDate != null">exam_date,</if>
+            <if test="createDate != null">create_date,</if>
+            <if test="updateDate != null">update_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="studentName != null">#{studentName},</if>
+            <if test="studentPassword != null">#{studentPassword},</if>
+            <if test="status != null">#{status},</if>
+            <if test="email != null">#{email},</if>
+            <if test="examName != null">#{examName},</if>
+            <if test="examType != null">#{examType},</if>
+            <if test="examDate != null">#{examDate},</if>
+            <if test="createDate != null">#{createDate},</if>
+            <if test="updateDate != null">#{updateDate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExamStudentManagement" parameterType="ExamStudentManagement">
+        update exam_student_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="studentName != null">student_name = #{studentName},</if>
+            <if test="studentPassword != null">student_password = #{studentPassword},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="examName != null">exam_name = #{examName},</if>
+            <if test="examType != null">exam_type = #{examType},</if>
+            <if test="examDate != null">exam_date = #{examDate},</if>
+            <if test="createDate != null">create_date = #{createDate},</if>
+            <if test="updateDate != null">update_date = #{updateDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamStudentManagementById" parameterType="Long">
+        delete from exam_student_management where id = #{id}
+    </delete>
+
+    <delete id="deleteExamStudentManagementByIds" parameterType="String">
+        delete from exam_student_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

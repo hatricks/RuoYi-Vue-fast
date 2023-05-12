@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.mapper.ExamResultManagementMapper">
+    
+    <resultMap type="ExamResultManagement" id="ExamResultManagementResult">
+        <result property="id"    column="id"    />
+        <result property="examStudentName"    column="exam_student_name"    />
+        <result property="examStudentCode"    column="exam_student_code"    />
+        <result property="examStudentScore"    column="exam_student_score"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="createDateTime"    column="create_date_time"    />
+        <result property="updateDateTime"    column="update_date_time"    />
+    </resultMap>
+
+    <sql id="selectExamResultManagementVo">
+        select id, exam_student_name, exam_student_code, exam_student_score, exam_id, create_date_time, update_date_time from exam_result_management
+    </sql>
+
+    <select id="selectExamResultManagementList" parameterType="ExamResultManagement" resultMap="ExamResultManagementResult">
+        <include refid="selectExamResultManagementVo"/>
+        <where>  
+            <if test="examStudentName != null  and examStudentName != ''"> and exam_student_name like concat('%', #{examStudentName}, '%')</if>
+            <if test="examStudentCode != null  and examStudentCode != ''"> and exam_student_code = #{examStudentCode}</if>
+            <if test="examStudentScore != null  and examStudentScore != ''"> and exam_student_score = #{examStudentScore}</if>
+            <if test="examId != null "> and exam_id = #{examId}</if>
+        </where>
+    </select>
+    
+    <select id="selectExamResultManagementById" parameterType="Long" resultMap="ExamResultManagementResult">
+        <include refid="selectExamResultManagementVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertExamResultManagement" parameterType="ExamResultManagement">
+        insert into exam_result_management
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="examStudentName != null">exam_student_name,</if>
+            <if test="examStudentCode != null">exam_student_code,</if>
+            <if test="examStudentScore != null">exam_student_score,</if>
+            <if test="examId != null">exam_id,</if>
+            <if test="createDateTime != null">create_date_time,</if>
+            <if test="updateDateTime != null">update_date_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="examStudentName != null">#{examStudentName},</if>
+            <if test="examStudentCode != null">#{examStudentCode},</if>
+            <if test="examStudentScore != null">#{examStudentScore},</if>
+            <if test="examId != null">#{examId},</if>
+            <if test="createDateTime != null">#{createDateTime},</if>
+            <if test="updateDateTime != null">#{updateDateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateExamResultManagement" parameterType="ExamResultManagement">
+        update exam_result_management
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examStudentName != null">exam_student_name = #{examStudentName},</if>
+            <if test="examStudentCode != null">exam_student_code = #{examStudentCode},</if>
+            <if test="examStudentScore != null">exam_student_score = #{examStudentScore},</if>
+            <if test="examId != null">exam_id = #{examId},</if>
+            <if test="createDateTime != null">create_date_time = #{createDateTime},</if>
+            <if test="updateDateTime != null">update_date_time = #{updateDateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteExamResultManagementById" parameterType="Long">
+        delete from exam_result_management where id = #{id}
+    </delete>
+
+    <delete id="deleteExamResultManagementByIds" parameterType="String">
+        delete from exam_result_management where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
