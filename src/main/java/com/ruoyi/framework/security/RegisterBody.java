@@ -2,11 +2,10 @@ package com.ruoyi.framework.security;
 
 /**
  * 用户注册对象
- * 
+ *
  * @author ruoyi
  */
-public class RegisterBody extends LoginBody
-{
+public class RegisterBody extends LoginBody {
     private String name;
     private Long examId;
     private String email;

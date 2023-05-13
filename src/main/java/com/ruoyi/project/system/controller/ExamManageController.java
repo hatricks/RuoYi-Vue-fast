@@ -2,6 +2,11 @@ package com.ruoyi.project.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import cn.hutool.core.collection.CollUtil;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.framework.security.LoginUser;
+import com.ruoyi.project.system.domain.SysRole;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,6 +46,13 @@ public class ExamManageController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(ExamManage examManage)
     {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        if (CollUtil.isNotEmpty(roles)) {
+            roles.stream().filter(x -> x.getRoleId().equals(100L)).findAny().ifPresent(x -> {
+                examManage.setUserCode(loginUser.getUsername());
+            });
+        }
         startPage();
         List<ExamManage> list = examManageService.selectExamManageList(examManage);
         return getDataTable(list);

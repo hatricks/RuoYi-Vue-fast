@@ -58,4 +58,6 @@ public interface IExamStudentManagementService
      * @return 结果
      */
     public int deleteExamStudentManagementById(Long id);
+
+    int updateUserStatus(ExamStudentManagement examStudentManagement);
 }

@@ -58,4 +58,6 @@ public interface ExamStudentManagementMapper
      * @return 结果
      */
     public int deleteExamStudentManagementByIds(Long[] ids);
+
+    int updateUserStatus(Long ids);
 }

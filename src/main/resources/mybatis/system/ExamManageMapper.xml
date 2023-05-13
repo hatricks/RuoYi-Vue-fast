@@ -1,73 +1,111 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.system.mapper.ExamManageMapper">
-    
     <resultMap type="ExamManage" id="ExamManageResult">
-        <result property="id"    column="id"    />
-        <result property="examName"    column="exam_name"    />
-        <result property="examDateTime"    column="exam_date_time"    />
-        <result property="examType"    column="exam_type"    />
-        <result property="createDate"    column="create_date"    />
-        <result property="updateDate"    column="update_date"    />
+        <result property="id" column="id"/>
+        <result property="examName" column="exam_name"/>
+        <result property="examDateTime" column="exam_date_time"/>
+        <result property="examType" column="exam_type"/>
+        <result property="createDate" column="create_date"/>
+        <result property="updateDate" column="update_date"/>
     </resultMap>
 
     <sql id="selectExamManageVo">
-        select id, exam_name, exam_date_time, exam_type, create_date, update_date from exam_manage
+        SELECT  * FROM (select em.id, em.exam_name, em.exam_date_time, em.exam_type, em.create_date, em.update_date, es.student_password
+                        from exam_manage em
+                                 left join exam_student_management es on em.exam_name = es.exam_name GROUP BY em.id) a
     </sql>
 
     <select id="selectExamManageList" parameterType="ExamManage" resultMap="ExamManageResult">
         <include refid="selectExamManageVo"/>
-        <where>  
-            <if test="examName != null  and examName != ''"> and exam_name like concat('%', #{examName}, '%')</if>
-            <if test="examDateTime != null "> and exam_date_time = #{examDateTime}</if>
-            <if test="examType != null  and examType != ''"> and exam_type = #{examType}</if>
-            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''"> and create_date between #{params.beginCreateDate} and #{params.endCreateDate}</if>
+        <where>
+            <if test="examName != null  and examName != ''">
+                and exam_name like concat('%', #{examName}, '%')
+            </if>
+            <if test="examDateTime != null ">
+                and exam_date_time = #{examDateTime}
+            </if>
+            <if test="examType != null  and examType != ''">
+                and exam_type = #{examType}
+            </if>
+            <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''">
+                and create_date between #{params.beginCreateDate} and #{params.endCreateDate}
+            </if>
+            <if test="userCode != null ">
+                and student_password = #{userCode}
+            </if>
         </where>
     </select>
-    
+
     <select id="selectExamManageById" parameterType="Long" resultMap="ExamManageResult">
         <include refid="selectExamManageVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertExamManage" parameterType="ExamManage" useGeneratedKeys="true" keyProperty="id">
         insert into exam_manage
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="examName != null">exam_name,</if>
-            <if test="examDateTime != null">exam_date_time,</if>
-            <if test="examType != null">exam_type,</if>
-            <if test="createDate != null">create_date,</if>
-            <if test="updateDate != null">update_date,</if>
-         </trim>
+            <if test="examName != null">
+                exam_name,
+            </if>
+            <if test="examDateTime != null">
+                exam_date_time,
+            </if>
+            <if test="examType != null">
+                exam_type,
+            </if>
+            <if test="createDate != null">
+                create_date,
+            </if>
+            <if test="updateDate != null">
+                update_date,
+            </if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="examName != null">#{examName},</if>
-            <if test="examDateTime != null">#{examDateTime},</if>
-            <if test="examType != null">#{examType},</if>
-            <if test="createDate != null">#{createDate},</if>
-            <if test="updateDate != null">#{updateDate},</if>
-         </trim>
+            <if test="examName != null">
+                #{examName},
+            </if>
+            <if test="examDateTime != null">
+                #{examDateTime},
+            </if>
+            <if test="examType != null">
+                #{examType},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+        </trim>
     </insert>
 
     <update id="updateExamManage" parameterType="ExamManage">
         update exam_manage
         <trim prefix="SET" suffixOverrides=",">
-            <if test="examName != null">exam_name = #{examName},</if>
-            <if test="examDateTime != null">exam_date_time = #{examDateTime},</if>
-            <if test="examType != null">exam_type = #{examType},</if>
-            <if test="createDate != null">create_date = #{createDate},</if>
-            <if test="updateDate != null">update_date = #{updateDate},</if>
+            <if test="examName != null">
+                exam_name = #{examName},
+            </if>
+            <if test="examDateTime != null">
+                exam_date_time = #{examDateTime},
+            </if>
+            <if test="examType != null">
+                exam_type = #{examType},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteExamManageById" parameterType="Long">
-        delete from exam_manage where id = #{id}
+        delete
+        from exam_manage
+        where id = #{id}
     </delete>
 
     <delete id="deleteExamManageByIds" parameterType="String">
-        delete from exam_manage where id in 
+        delete from exam_manage where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
