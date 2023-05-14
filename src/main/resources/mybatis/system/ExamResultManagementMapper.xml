@@ -23,7 +23,8 @@
                create_date_time,
                update_date_time,
                ea.exam_name,
-               ea.exam_type
+               ea.exam_type,
+               ea.exam_score
         from exam_result_management em
                  INNER JOIN exam_manage ea ON em.exam_id = ea.id
     </sql>

@@ -33,8 +33,8 @@ public class ExamManage extends BaseEntity {
     /**
      * 开考时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开考时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
+    @Excel(name = "开考时间", width = 30, dateFormat = "yyyy-MM-dd hh:mm:ss")
     private Date examDateTime;
 
     /**
@@ -42,6 +42,13 @@ public class ExamManage extends BaseEntity {
      */
     @Excel(name = "考试类型")
     private String examType;
+
+
+    /**
+     * 考试类型
+     */
+    @Excel(name = "考试基准分")
+    private String examScore;
 
     /**
      * 创建时间

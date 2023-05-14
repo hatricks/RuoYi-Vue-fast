@@ -53,6 +53,9 @@ public class ExamResultManagement extends BaseEntity {
     @Excel(name = "考试id-关联具体考试信息")
     private Long examId;
 
+    private String examScore;
+
+    private String examStatus;
 
     private String examName;
 

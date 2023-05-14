@@ -13,9 +13,18 @@
     </resultMap>
 
     <sql id="selectExamManageVo">
-        SELECT  * FROM (select em.id, em.exam_name, em.exam_date_time, em.exam_type, em.create_date, em.update_date, es.student_password
-                        from exam_manage em
-                                 left join exam_student_management es on em.exam_name = es.exam_name GROUP BY em.id) a
+        SELECT *
+        FROM (select em.id,
+                     em.exam_name,
+                     em.exam_date_time,
+                     em.exam_type,
+                     em.create_date,
+                     em.update_date,
+                     es.student_password,
+                     em.exam_score
+              from exam_manage em
+                       left join exam_student_management es on em.exam_name = es.exam_name
+              GROUP BY em.id) a
     </sql>
 
     <select id="selectExamManageList" parameterType="ExamManage" resultMap="ExamManageResult">
@@ -24,7 +33,7 @@
             <if test="examName != null  and examName != ''">
                 and exam_name like concat('%', #{examName}, '%')
             </if>
-            <if test="examDateTime != null ">
+            <if test="examDateTime != null">
                 and exam_date_time = #{examDateTime}
             </if>
             <if test="examType != null  and examType != ''">
@@ -33,7 +42,7 @@
             <if test="params.beginCreateDate != null and params.beginCreateDate != '' and params.endCreateDate != null and params.endCreateDate != ''">
                 and create_date between #{params.beginCreateDate} and #{params.endCreateDate}
             </if>
-            <if test="userCode != null ">
+            <if test="userCode != null">
                 and student_password = #{userCode}
             </if>
         </where>
@@ -62,6 +71,9 @@
             <if test="updateDate != null">
                 update_date,
             </if>
+            <if test="examScore != null and examScore != ''">
+                exam_score,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="examName != null">
@@ -79,6 +91,9 @@
             <if test="updateDate != null">
                 #{updateDate},
             </if>
+            <if test="examScore != null and examScore != ''">
+                #{examScore,jdbcType=VARCHAR}
+            </if>
         </trim>
     </insert>
 
@@ -94,6 +109,9 @@
             <if test="examType != null">
                 exam_type = #{examType},
             </if>
+            <if test="examScore != null and examScore != ''">
+                exam_score = #{examScore},
+            </if>
         </trim>
         where id = #{id}
     </update>
@@ -105,7 +123,8 @@
     </delete>
 
     <delete id="deleteExamManageByIds" parameterType="String">
-        delete from exam_manage where id in
+        delete
+        from exam_manage where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
